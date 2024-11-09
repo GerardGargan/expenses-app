@@ -7,6 +7,6 @@ export default function AllExpenses() {
     const expensesCtx = useContext(ExpensesContext);
 
     return (
-        <ExpenesOutput expensesPeriod='Total' expenses={expensesCtx.expenses} />
+        <ExpenesOutput fallbackText='No expenses found' expensesPeriod='Total' expenses={expensesCtx.expenses} />
     );
 }
