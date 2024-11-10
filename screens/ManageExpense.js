@@ -7,12 +7,17 @@ import { useContext } from "react";
 import { ExpensesContext } from "../constants/store/expense-context";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 
-export default function ManageExpense({ route, navigation, mode }) {
+export default function ManageExpense({ route, navigation }) {
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
 
+  
   const expensesCtx = useContext(ExpensesContext);
-
+  
+  const selectedExpense = expensesCtx.expenses.find(
+    (expense) => expense.id === editedExpenseId
+  );
+  
   useLayoutEffect(() => {
     navigation.setOptions({
       title: isEditing ? "Edit Expense" : "Add Expense",
@@ -39,7 +44,12 @@ export default function ManageExpense({ route, navigation, mode }) {
 
   return (
     <View style={styles.container}>
-      <ExpenseForm onCancel={cancelHandler} submitButtonLabel={isEditing ? 'Update' : 'Add'} onSubmit={confirmHandler} />
+      <ExpenseForm
+        onCancel={cancelHandler}
+        submitButtonLabel={isEditing ? "Update" : "Add"}
+        onSubmit={confirmHandler}
+        defaultValues={selectedExpense}
+      />
       {isEditing && (
         <View style={styles.deleteContainer}>
           <IconButton
