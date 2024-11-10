@@ -17,7 +17,7 @@ export default function ExpenseForm({
       isValid: true,
     },
     date: {
-      value: defaultValues ? getFormattedDate(defaultValues.date) : "",
+      value: defaultValues ? getFormattedDate(defaultValues.date) : getFormattedDate(new Date()),
       isValid: true,
     },
     description: {
