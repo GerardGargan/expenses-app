@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { GlobalStyles } from "./constants/styles";
 

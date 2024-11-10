@@ -1,10 +1,11 @@
 import { useLayoutEffect } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import IconButton from "../components/UI/IconButton";
 import { GlobalStyles } from "../constants/styles";
 import Button from "../components/UI/Button";
 import { useContext } from "react";
 import { ExpensesContext } from "../constants/store/expense-context";
+import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 
 export default function ManageExpense({ route, navigation, mode }) {
   const editedExpenseId = route.params?.expenseId;
@@ -46,6 +47,7 @@ export default function ManageExpense({ route, navigation, mode }) {
 
   return (
     <View style={styles.container}>
+      <ExpenseForm />
       <View style={styles.buttonContainer}>
         <Button style={styles.buttonStyle} mode="flat" onPress={cancelHandler}>
           Cancel
