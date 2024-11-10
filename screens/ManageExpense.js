@@ -8,9 +8,11 @@ import { ExpensesContext } from "../constants/store/expense-context";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 import { storeExpense, updateExpense, deleteExpense } from "../util/http";
 import LoadingOverlay from "../components/UI/LoadingOverlay";
+import ErrorOverlay from "../components/UI/ErrorOverlay";
 
 export default function ManageExpense({ route, navigation }) {
   const [isFetching, setIsFetching] = useState(false);
+  const [error, setError] = useState();
 
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
@@ -29,11 +31,15 @@ export default function ManageExpense({ route, navigation }) {
   }, [navigation, isEditing]);
 
   async function deleteExpenseHandler() {
-    expensesCtx.deleteExpense(editedExpenseId);
     setIsFetching(true);
-    await deleteExpense(editedExpenseId);
-    setIsFetching(false);
-    navigation.goBack();
+    try {
+      await deleteExpense(editedExpenseId);
+      expensesCtx.deleteExpense(editedExpenseId);
+      navigation.goBack();
+    } catch(error) {
+      setError('Error deleting expense!');
+      setIsFetching(false);
+    }
   }
 
   function cancelHandler() {
@@ -42,15 +48,28 @@ export default function ManageExpense({ route, navigation }) {
 
   async function confirmHandler(expenseData) {
     setIsFetching(true);
-    if (isEditing) {
-      expensesCtx.updateExpense(editedExpenseId, expenseData);
-      await updateExpense(editedExpenseId, expenseData);
-    } else {
-      const id = await storeExpense(expenseData);
-      expensesCtx.addExpense({...expenseData, id});
+    try {
+      if (isEditing) {
+        await updateExpense(editedExpenseId, expenseData);
+        expensesCtx.updateExpense(editedExpenseId, expenseData);
+      } else {
+        const id = await storeExpense(expenseData);
+        expensesCtx.addExpense({...expenseData, id});
+      }
+      navigation.goBack();
+    } catch(error) {
+      setError('Could not save data!');
+      setIsFetching(false);
     }
-    setIsFetching(false);
-    navigation.goBack();
+    //setIsFetching(false);
+  }
+
+  function handleError() {
+    setError(null);
+  }
+
+  if(error && !isFetching) {
+    return <ErrorOverlay message={error} onConfirm={handleError} />
   }
 
   if(isFetching) {
